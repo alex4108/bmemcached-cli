@@ -22,13 +22,13 @@ import pprint
 def print_error(message):
     red = '\033[91m'
     end = '\033[0m'
-    print '%s[ERROR]%s %s' % (red, end, message)
+    print ('%s[ERROR]%s %s' %(red, end, message))
 
 
 def print_warning(message):
     yellow = '\033[33m'
     end = '\033[0m'
-    print '%s[WARNING]%s %s' % (yellow, end, message)
+    print ('%s[WARNING]%s %s' %(yellow, end, message))
 
 
 class BMemcachedCli(cmd.Cmd, object):
@@ -36,7 +36,7 @@ class BMemcachedCli(cmd.Cmd, object):
         super(BMemcachedCli, self).__init__()
         # look hosts for username/password for SASL authentication - when found, assume all servers use the same
         auth = [None, None]
-        for idx in xrange(len(host_list)):
+        for idx in range(len(host_list)):
             if host_list[idx].find('@') > -1:
                 auth = host_list[idx].split('@')[0].split(':')
                 host_list[idx] = host_list[idx].split('@')[1]  # remove auth from server entry
@@ -68,7 +68,7 @@ class BMemcachedCli(cmd.Cmd, object):
                 # Rabbit Holes can get pretty deep, better to keep a lid on it
                 pp = pprint.PrettyPrinter(depth=4)
                 pp.pprint(self.memcache.stats(line))
-            except Exception, e:
+            except Exception as e:
                 print_error(e)
 
         def handler(self, line):
@@ -77,7 +77,7 @@ class BMemcachedCli(cmd.Cmd, object):
                 # This is where the magic happens, get our function by name, pass the arguments,
                 # then pretty-print the results
                 pprint.pprint(getattr(self.memcache, name)(*parts))
-            except Exception, e:
+            except Exception as e:
                 print_error(e)
 
         return handler
@@ -86,7 +86,7 @@ class BMemcachedCli(cmd.Cmd, object):
     # This just lets cmd know how to print help commands for arbitrary methods
     def _make_help(doc):
         def help(self):
-            print doc
+            print (doc)
 
         return help
 
@@ -136,7 +136,7 @@ def main():
         host_list = ['localhost:11211']
         print_warning('No hosts specified, defaulting to %s' % host_list[0])
     # Some banner fun to make our CLI all warm and fuzzy
-    print "Connecting to %s" % (', '.join(host_list))
+    print ("Connecting to %s" %(', '.join(host_list)))
     # Outer loop so we can recover from interrupts, which cmd does not
     # handle well
     while True:
@@ -145,7 +145,7 @@ def main():
             BMemcachedCli(host_list).cmdloop()
         except KeyboardInterrupt:
             # Should be wary if this is opening extra connections on CTRL-C
-            print "^C"
+            print ("^C")
             continue
         break
 
